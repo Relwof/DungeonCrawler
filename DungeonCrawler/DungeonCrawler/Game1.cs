@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace DungeonCrawler
 {
@@ -11,6 +12,12 @@ namespace DungeonCrawler
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Texture2D banditImage;
+        Vector2 banditPosition;
+
+
+
 
         public Game1()
         {
@@ -26,7 +33,11 @@ namespace DungeonCrawler
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+
+            //set the starting position
+            //banditPosition = new Vector2(0.0f, 0.0f);
+
+            banditPosition = Vector2.Zero;
 
             base.Initialize();
         }
@@ -39,6 +50,8 @@ namespace DungeonCrawler
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            banditImage = Content.Load<Texture2D>("bandit");
 
             // TODO: use this.Content to load your game content here
         }
@@ -62,7 +75,43 @@ namespace DungeonCrawler
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float speed = 50.0f;
+            float movement = speed * time;
+
             // TODO: Add your update logic here
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.S))
+            {
+
+                banditPosition.Y += movement;
+
+            }
+
+            if (state.IsKeyDown(Keys.W))
+            {
+
+                banditPosition.Y -= movement;
+
+            }
+
+            if (state.IsKeyDown(Keys.A))
+            {
+
+                banditPosition.X -= movement;
+
+            }
+
+            if (state.IsKeyDown(Keys.D))
+            {
+
+                banditPosition.X += movement;
+
+            }
+
+
 
             base.Update(gameTime);
         }
@@ -73,9 +122,16 @@ namespace DungeonCrawler
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkBlue);
 
             // TODO: Add your drawing code here
+
+            //Draw our Sprite
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(banditImage, banditPosition, Color.White);
+            spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
