@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Threading;
 
 namespace DungeonCrawler
 {
@@ -15,6 +16,12 @@ namespace DungeonCrawler
 
         Texture2D banditImage;
         Vector2 banditPosition;
+
+        Thread mainThread;
+        DungeonCrawlMain.DungeronCrawlMain main;
+        MonoResponder responder;
+
+        public Color BGColor { get; set; } = Color.DarkGreen;
 
 
 
@@ -53,7 +60,16 @@ namespace DungeonCrawler
 
             banditImage = Content.Load<Texture2D>("bandit");
 
+            responder = new MonoResponder(this);
+            main = new DungeonCrawlMain.DungeronCrawlMain();
+            mainThread = new Thread(new ThreadStart(mainThreadStart));
+            mainThread.Start();
             // TODO: use this.Content to load your game content here
+        }
+
+        void mainThreadStart()
+        {
+            main.Run(responder);
         }
 
         /// <summary>
@@ -113,6 +129,8 @@ namespace DungeonCrawler
 
 
 
+
+
             base.Update(gameTime);
         }
 
@@ -122,7 +140,7 @@ namespace DungeonCrawler
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkBlue);
+            GraphicsDevice.Clear(BGColor);
 
             // TODO: Add your drawing code here
 
